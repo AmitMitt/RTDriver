@@ -1,11 +1,10 @@
-package com.roadTransport.RTDriver.model;
+package com.roadTransport.RTDriver.model.otp;
 
 public class OtpDetails {
 
     private long Id;
     private long otpNumber;
     private long otpStartTime;
-    private long otpEndTime;
     private long userMobileNumber;
 
     public long getId() {
@@ -30,14 +29,6 @@ public class OtpDetails {
 
     public void setOtpStartTime(long otpStartTime) {
         this.otpStartTime = otpStartTime;
-    }
-
-    public long getOtpEndTime() {
-        return otpEndTime;
-    }
-
-    public void setOtpEndTime(long otpEndTime) {
-        this.otpEndTime = otpEndTime;
     }
 
     public long getUserMobileNumber() {

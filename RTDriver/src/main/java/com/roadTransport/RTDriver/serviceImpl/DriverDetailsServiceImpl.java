@@ -1,13 +1,16 @@
 package com.roadTransport.RTDriver.serviceImpl;
 
+import com.roadTransport.RTDriver.entity.DeletedDriverDetails;
 import com.roadTransport.RTDriver.entity.DriverDetails;
 import com.roadTransport.RTDriver.entity.DriverTemporaryDetails;
 import com.roadTransport.RTDriver.model.DriverDetailsRequest;
-import com.roadTransport.RTDriver.model.OtpRequest;
+import com.roadTransport.RTDriver.model.otp.OtpDetails;
+import com.roadTransport.RTDriver.model.otp.OtpRequest;
 import com.roadTransport.RTDriver.otpService.OtpService;
 import com.roadTransport.RTDriver.repository.DriverDetailsPageRepository;
 import com.roadTransport.RTDriver.repository.DriverDetailsRepository;
 import com.roadTransport.RTDriver.repository.DriverTemporaryDetailsRepository;
+import com.roadTransport.RTDriver.repository.deletedRepository.DeletedDriverRepository;
 import com.roadTransport.RTDriver.service.DriverDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +35,9 @@ public class DriverDetailsServiceImpl implements DriverDetailsService {
 
    @Autowired
    private DriverDetailsPageRepository driverDetailsPageRepository;
+
+   @Autowired
+   private DeletedDriverRepository deletedDriverRepository;
 
     @Override
     public DriverDetails add(OtpRequest otpRequest) throws Exception {
@@ -89,13 +95,36 @@ public class DriverDetailsServiceImpl implements DriverDetailsService {
     }
 
     @Override
-    public DriverDetails delete(long driverMobileNumber) throws Exception {
+    public DeletedDriverDetails delete(long driverMobileNumber) throws Exception {
 
         DriverDetails driverDetails = driverDetailsRepository.findByMdn(driverMobileNumber);
-        driverDetails.setStatus(false);
-        driverDetailsRepository.saveAndFlush(driverDetails);
+        DeletedDriverDetails deletedDriverDetails = new DeletedDriverDetails();
 
-        return null;
+        deletedDriverDetails.setAadharCardNumber(driverDetails.getAadharCardNumber());
+        deletedDriverDetails.setAdhaarCardImage(driverDetails.getAdhaarCardImage());
+        deletedDriverDetails.setCreatedDate(new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
+        deletedDriverDetails.setDescription(driverDetails.getDescription());
+        deletedDriverDetails.setDob(driverDetails.getDob());
+        deletedDriverDetails.setDriverAddress(driverDetails.getDriverAddress());
+        deletedDriverDetails.setDriverAge(driverDetails.getDriverAge());
+        deletedDriverDetails.setDriverImage(driverDetails.getDriverImage());
+        deletedDriverDetails.setDriverName(driverDetails.getDriverName());
+        deletedDriverDetails.setLicenceImage(driverDetails.getLicenceImage());
+        deletedDriverDetails.setLicenceNumber(driverDetails.getLicenceNumber());
+        deletedDriverDetails.setMobileNumber(driverDetails.getMobileNumber());
+        deletedDriverDetails.setPanCardImage(driverDetails.getPanCardImage());
+        deletedDriverDetails.setPanCardNumber(driverDetails.getPanCardNumber());
+        deletedDriverDetails.setStatus(false);
+        deletedDriverDetails.setTransportName(driverDetails.getTransportName());
+        deletedDriverDetails.setTransportNumber(driverDetails.getTransportNumber());
+        deletedDriverDetails.setVehicleNumber(driverDetails.getVehicleNumber());
+        deletedDriverDetails.setVehicleType(driverDetails.getVehicleType());
+        OtpDetails otpDetails = otpService.getOtp(driverMobileNumber);
+        deletedDriverDetails.setOtp(otpDetails.getOtpNumber());
+
+        deletedDriverRepository.saveAndFlush(deletedDriverDetails);
+
+        return deletedDriverDetails;
     }
 
     @Override
@@ -172,5 +201,21 @@ public class DriverDetailsServiceImpl implements DriverDetailsService {
         driverDetails.setStatus(driverDetailsRequest.isStatus());
         driverDetailsRepository.saveAndFlush(driverDetails);
         return driverDetails;
+    }
+
+    @Override
+    public DriverDetails deleteByOtp(OtpRequest otpRequest) throws Exception {
+
+        DriverDetails driverDetails = driverDetailsRepository.findByMdn(otpRequest.getUserMobileNumber());
+
+        boolean verify = otpService.verify(otpRequest.getOtp(),otpRequest.getUserMobileNumber());
+
+        if(verify == false){
+
+            throw new Exception("Otp is Expired.");
+        }
+
+        driverDetailsRepository.delete(driverDetails);
+        return null;
     }
 }

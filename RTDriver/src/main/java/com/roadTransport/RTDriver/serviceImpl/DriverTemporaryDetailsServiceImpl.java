@@ -3,7 +3,7 @@ package com.roadTransport.RTDriver.serviceImpl;
 import com.roadTransport.RTDriver.entity.DriverDetails;
 import com.roadTransport.RTDriver.entity.DriverTemporaryDetails;
 import com.roadTransport.RTDriver.model.DriverDetailsRequest;
-import com.roadTransport.RTDriver.model.OtpDetails;
+import com.roadTransport.RTDriver.model.otp.OtpDetails;
 import com.roadTransport.RTDriver.otpService.OtpService;
 import com.roadTransport.RTDriver.repository.DriverDetailsRepository;
 import com.roadTransport.RTDriver.repository.DriverTemporaryDetailsPageRepository;

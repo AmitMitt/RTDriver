@@ -1,9 +1,10 @@
 package com.roadTransport.RTDriver.controller;
 
+import com.roadTransport.RTDriver.entity.DeletedDriverDetails;
 import com.roadTransport.RTDriver.entity.DriverDetails;
 import com.roadTransport.RTDriver.model.DriverDetailsRequest;
 import com.roadTransport.RTDriver.model.DriverDetailsResponse;
-import com.roadTransport.RTDriver.model.OtpRequest;
+import com.roadTransport.RTDriver.model.otp.OtpRequest;
 import com.roadTransport.RTDriver.service.DriverDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -59,13 +60,25 @@ public class DriverDetailsController {
         return ResponseEntity.ok(driverDetailsResponse);
     }
 
-    @CacheEvict(value = "DriverDetails", allEntries=true)
+
     @DeleteMapping("/delete")
     public ResponseEntity<DriverDetailsResponse> delete (@RequestBody DriverDetailsRequest driverDetailsRequest) throws Exception {
 
-        driverDetailsService.delete(driverDetailsRequest.getMobileNumber());
+       DeletedDriverDetails deletedDriverDetails = driverDetailsService.delete(driverDetailsRequest.getMobileNumber());
         DriverDetailsResponse driverDetailsResponse = new DriverDetailsResponse();
-        driverDetailsResponse.setMessage("Successfully Deleted.");
+        driverDetailsResponse.setMessage("Enter the Otp.");
+        driverDetailsResponse.setOtp(deletedDriverDetails.getOtp());
+        return ResponseEntity.ok(driverDetailsResponse);
+    }
+
+    @CacheEvict(value = "DriverDetails", allEntries=true)
+    @PostMapping("/verifyDeletionOtp")
+    public ResponseEntity<DriverDetailsResponse> verifyDeletion(@RequestBody OtpRequest otpRequest) throws Exception {
+
+        driverDetailsService.deleteByOtp(otpRequest);
+        DriverDetailsResponse driverDetailsResponse = new DriverDetailsResponse();
+        driverDetailsResponse.setMessage("User Successfully Deleted.");
+        driverDetailsResponse.setOtp(otpRequest.getOtp());
         return ResponseEntity.ok(driverDetailsResponse);
     }
 

@@ -1,7 +1,7 @@
 package com.roadTransport.RTDriver.otpService;
 
 
-import com.roadTransport.RTDriver.model.OtpDetails;
+import com.roadTransport.RTDriver.model.otp.OtpDetails;
 import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

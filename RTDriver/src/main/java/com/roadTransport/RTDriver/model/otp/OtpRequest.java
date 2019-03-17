@@ -1,4 +1,4 @@
-package com.roadTransport.RTDriver.model;
+package com.roadTransport.RTDriver.model.otp;
 
 public class OtpRequest {
 
