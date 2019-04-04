@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 @Service
 public class DriverTemporaryDetailsServiceImpl implements DriverTemporaryDetailsService {
@@ -33,7 +34,6 @@ public class DriverTemporaryDetailsServiceImpl implements DriverTemporaryDetails
     @Autowired
     private DriverTemporaryDetailsRepository driverTemporaryDetailsRepository;
 
-
     @Override
     public DriverTemporaryDetails add(DriverDetailsRequest driverDetailsRequest) throws Exception {
 
@@ -49,7 +49,7 @@ public class DriverTemporaryDetailsServiceImpl implements DriverTemporaryDetails
             DriverTemporaryDetails driverTemporaryDetails1 = new DriverTemporaryDetails();
             driverTemporaryDetails1.setAadharCardNumber(driverDetailsRequest.getAadharCardNumber());
             driverTemporaryDetails1.setAdhaarCardImage(driverDetailsRequest.getAdhaarCardImage());
-            driverTemporaryDetails1.setCreatedDate(new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
+            driverTemporaryDetails1.setCreatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis());
             driverTemporaryDetails1.setDescription(driverDetailsRequest.getDescription());
             driverTemporaryDetails1.setDob(driverDetailsRequest.getDob());
             driverTemporaryDetails1.setDriverAddress(driverDetailsRequest.getDriverAddress());
@@ -68,7 +68,7 @@ public class DriverTemporaryDetailsServiceImpl implements DriverTemporaryDetails
             driverTemporaryDetails1.setVehicleNumber(driverDetailsRequest.getVehicleNumber());
             driverTemporaryDetails1.setVehicleType(driverDetailsRequest.getVehicleType());
 
-            OtpDetails otpDetails = otpService.getOtp(driverDetailsRequest.getMobileNumber());
+            OtpDetails otpDetails = otpService.getOtp(Long.parseLong(driverDetailsRequest.getMobileNumber()));
             driverTemporaryDetails1.setOtp(otpDetails.getOtpNumber());
             driverTemporaryDetailsRepository.saveAndFlush(driverTemporaryDetails1);
             return driverTemporaryDetails1;
@@ -77,7 +77,7 @@ public class DriverTemporaryDetailsServiceImpl implements DriverTemporaryDetails
 
             driverTemporaryDetails.setAadharCardNumber(driverDetailsRequest.getAadharCardNumber());
             driverTemporaryDetails.setAdhaarCardImage(driverDetailsRequest.getAdhaarCardImage());
-            driverTemporaryDetails.setModifiedDate(new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime()));
+            driverTemporaryDetails.setModifiedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis());
             driverTemporaryDetails.setDescription(driverDetailsRequest.getDescription());
             driverTemporaryDetails.setDob(driverDetailsRequest.getDob());
             driverTemporaryDetails.setDriverAddress(driverDetailsRequest.getDriverAddress());
@@ -96,7 +96,7 @@ public class DriverTemporaryDetailsServiceImpl implements DriverTemporaryDetails
             driverTemporaryDetails.setVehicleNumber(driverDetailsRequest.getVehicleNumber());
             driverTemporaryDetails.setVehicleType(driverDetailsRequest.getVehicleType());
 
-            OtpDetails otpDetails = otpService.getOtp(driverDetailsRequest.getMobileNumber());
+            OtpDetails otpDetails = otpService.getOtp(Long.parseLong(driverDetailsRequest.getMobileNumber()));
             driverTemporaryDetails.setOtp(otpDetails.getOtpNumber());
             driverTemporaryDetailsRepository.saveAndFlush(driverTemporaryDetails);
             return driverTemporaryDetails;
@@ -104,9 +104,9 @@ public class DriverTemporaryDetailsServiceImpl implements DriverTemporaryDetails
     }
 
     @Override
-    public DriverTemporaryDetails getListByMdn(long driverMobileNumber) throws Exception {
+    public DriverTemporaryDetails getListByMdn(String mobileNumber) throws Exception {
 
-        DriverTemporaryDetails driverTemporaryDetails = driverTemporaryDetailsRepository.findByMdn(driverMobileNumber);
+        DriverTemporaryDetails driverTemporaryDetails = driverTemporaryDetailsRepository.findByMdn(mobileNumber);
 
         return driverTemporaryDetails;
     }

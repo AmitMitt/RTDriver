@@ -3,7 +3,7 @@ package com.roadTransport.RTDriver.model;
 public class DriverDetailsRequest {
 
     private String driverName;
-    private long mobileNumber;
+    private String mobileNumber;
     private String licenceNumber;
     private long aadharCardNumber;
     private String panCardNumber;
@@ -38,11 +38,11 @@ public class DriverDetailsRequest {
         this.driverName = driverName;
     }
 
-    public long getMobileNumber() {
+    public String getMobileNumber() {
         return mobileNumber;
     }
 
-    public void setMobileNumber(long mobileNumber) {
+    public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
 

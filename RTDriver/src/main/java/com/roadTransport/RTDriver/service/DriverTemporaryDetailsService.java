@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public interface DriverTemporaryDetailsService {
 
     public DriverTemporaryDetails add (DriverDetailsRequest driverDetailsRequest) throws Exception;
-    public DriverTemporaryDetails getListByMdn(long driverMobileNumber) throws Exception;
+    public DriverTemporaryDetails getListByMdn(String mobileNumber) throws Exception;
     public Page<DriverTemporaryDetails> listAllByPage(Pageable pageable);
 
 }

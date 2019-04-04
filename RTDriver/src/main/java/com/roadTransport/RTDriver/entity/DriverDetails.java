@@ -1,10 +1,18 @@
 package com.roadTransport.RTDriver.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Table
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
+@SQLDelete(sql = "update DriverDetails set deleted=true where id=?")
+@Where(clause = "deleted=false")
 public class DriverDetails {
 
     @Id
@@ -13,12 +21,16 @@ public class DriverDetails {
     private long id;
 
     @Column
+    private boolean deleted;
+
+    @Column
     @NotNull
     private String driverName;
 
     @Column
     @NotNull
-    private long mobileNumber;
+    @Size(min = 10,max = 10)
+    private String mobileNumber;
 
     @Column
     @NotNull
@@ -55,17 +67,19 @@ public class DriverDetails {
     private String TransportName;
 
     @Column
-    private String createdDate;
+    private long createdDate;
 
     @Column
-    private String modifiedDate;
+    private long modifiedDate;
 
     @Column
     private String vehicleType;
 
+    @NotNull
     @Column
     private String driverAddress;
 
+    @NotNull
     @Column
     private long driverAge;
 
@@ -84,6 +98,14 @@ public class DriverDetails {
 
     @Column
     private boolean kyc;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
     public boolean isKyc() {
         return kyc;
@@ -109,11 +131,11 @@ public class DriverDetails {
         this.driverName = driverName;
     }
 
-    public long getMobileNumber() {
+    public String getMobileNumber() {
         return mobileNumber;
     }
 
-    public void setMobileNumber(long mobileNumber) {
+    public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
 
@@ -189,19 +211,19 @@ public class DriverDetails {
         TransportName = transportName;
     }
 
-    public String getCreatedDate() {
+    public long getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(String createdDate) {
+    public void setCreatedDate(long createdDate) {
         this.createdDate = createdDate;
     }
 
-    public String getModifiedDate() {
+    public long getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(String modifiedDate) {
+    public void setModifiedDate(long modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
@@ -265,8 +287,9 @@ public class DriverDetails {
     public String toString() {
         return "DriverDetails{" +
                 "id=" + id +
+                ", deleted=" + deleted +
                 ", driverName='" + driverName + '\'' +
-                ", mobileNumber=" + mobileNumber +
+                ", mobileNumber='" + mobileNumber + '\'' +
                 ", licenceNumber='" + licenceNumber + '\'' +
                 ", aadharCardNumber=" + aadharCardNumber +
                 ", panCardNumber='" + panCardNumber + '\'' +
@@ -276,8 +299,8 @@ public class DriverDetails {
                 ", licenceImage='" + licenceImage + '\'' +
                 ", vehicleNumber='" + vehicleNumber + '\'' +
                 ", TransportName='" + TransportName + '\'' +
-                ", createdDate='" + createdDate + '\'' +
-                ", modifiedDate='" + modifiedDate + '\'' +
+                ", createdDate=" + createdDate +
+                ", modifiedDate=" + modifiedDate +
                 ", vehicleType='" + vehicleType + '\'' +
                 ", driverAddress='" + driverAddress + '\'' +
                 ", driverAge=" + driverAge +
@@ -285,7 +308,7 @@ public class DriverDetails {
                 ", status=" + status +
                 ", description='" + description + '\'' +
                 ", TransportNumber='" + TransportNumber + '\'' +
-                ", kyc='" + kyc + '\'' +
+                ", kyc=" + kyc +
                 '}';
     }
 }

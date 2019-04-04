@@ -3,6 +3,7 @@ package com.roadTransport.RTDriver.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Table
 @Entity
@@ -19,7 +20,8 @@ public class DriverTemporaryDetails {
 
     @Column
     @NotNull
-    private long mobileNumber;
+    @Size(min = 10,max = 10)
+    private String mobileNumber;
 
     @Column
     @NotNull
@@ -56,17 +58,19 @@ public class DriverTemporaryDetails {
     private String TransportName;
 
     @Column
-    private String createdDate;
+    private long createdDate;
 
     @Column
-    private String modifiedDate;
+    private long modifiedDate;
 
     @Column
     private String vehicleType;
 
+    @NotNull
     @Column
     private String driverAddress;
 
+    @NotNull
     @Column
     private long driverAge;
 
@@ -121,11 +125,11 @@ public class DriverTemporaryDetails {
         this.driverName = driverName;
     }
 
-    public long getMobileNumber() {
+    public String getMobileNumber() {
         return mobileNumber;
     }
 
-    public void setMobileNumber(long mobileNumber) {
+    public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
 
@@ -201,19 +205,19 @@ public class DriverTemporaryDetails {
         TransportName = transportName;
     }
 
-    public String getCreatedDate() {
+    public long getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(String createdDate) {
+    public void setCreatedDate(long createdDate) {
         this.createdDate = createdDate;
     }
 
-    public String getModifiedDate() {
+    public long getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(String modifiedDate) {
+    public void setModifiedDate(long modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 

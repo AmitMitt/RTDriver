@@ -28,15 +28,15 @@ public class DriverTemporaryDetailsController {
         return ResponseEntity.ok(driverDetailsResponse);
     }
 
-    @Cacheable(value = "DriverTemporaryDetails", key = "#driverMobileNumber")
-    @GetMapping("/getData/{driverMobileNumber}")
-    public ResponseEntity<DriverTemporaryDetails> getDataByMdn(@PathVariable("driverMobileNumber") long driverMobileNumber) throws Exception {
+    @Cacheable(value = "DriverTemporaryDetails", key = "#mobileNumber")
+    @GetMapping("/getData/{mobileNumber}")
+    public ResponseEntity<DriverTemporaryDetails> getDataByMdn(@PathVariable("mobileNumber") String mobileNumber) throws Exception {
 
-        DriverTemporaryDetails driverTemporaryDetails = driverTemporaryDetailsService.getListByMdn(driverMobileNumber);
+        DriverTemporaryDetails driverTemporaryDetails = driverTemporaryDetailsService.getListByMdn(mobileNumber);
         return ResponseEntity.ok(driverTemporaryDetails);
     }
 
-    @Cacheable(value = "DriverTemporaryDetails", key = "#driverMobileNumber")
+    @Cacheable(value = "DriverTemporaryDetails", key = "#mobileNumber")
     @GetMapping("/getlistByPage")
     public Page<DriverTemporaryDetails> getList(Pageable pageable){
 

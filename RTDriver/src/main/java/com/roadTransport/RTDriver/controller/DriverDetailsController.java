@@ -1,6 +1,5 @@
 package com.roadTransport.RTDriver.controller;
 
-import com.roadTransport.RTDriver.entity.DeletedDriverDetails;
 import com.roadTransport.RTDriver.entity.DriverDetails;
 import com.roadTransport.RTDriver.model.DriverDetailsRequest;
 import com.roadTransport.RTDriver.model.DriverDetailsResponse;
@@ -24,8 +23,8 @@ public class DriverDetailsController {
     @Autowired
     private DriverDetailsService driverDetailsService;
 
-    @PostMapping("/addUser")
-    public ResponseEntity<DriverDetailsResponse> addUser(@RequestBody OtpRequest otpRequest) throws Exception {
+    @PostMapping("/addDriver")
+    public ResponseEntity<DriverDetailsResponse> addDriver(@RequestBody OtpRequest otpRequest) throws Exception {
 
         driverDetailsService.add(otpRequest);
         DriverDetailsResponse driverDetailsResponse = new DriverDetailsResponse();
@@ -34,7 +33,7 @@ public class DriverDetailsController {
         return ResponseEntity.ok(driverDetailsResponse);
     }
 
-    @Cacheable(value = "DriverDetails", key = "#driverMobileNumber")
+    @Cacheable(value = "DriverDetails", key = "#mobileNumber")
     @GetMapping("/getlistByPage")
     public Page<DriverDetails> getList(Pageable pageable){
 
@@ -42,32 +41,21 @@ public class DriverDetailsController {
         return list;
     }
 
-    @Cacheable(value = "DriverDetails", key = "#driverMobileNumber")
-    @GetMapping("/getlist/{driverMobileNumber}")
-    public ResponseEntity<DriverDetails> getListByMdn(@PathVariable("driverMobileNumber") long driverMobileNumber) throws Exception {
+    @Cacheable(value = "DriverDetails", key = "#mobileNumber")
+    @GetMapping("/getlist/{mobileNumber}")
+    public ResponseEntity<DriverDetails> getListByMdn(@PathVariable("mobileNumber") String mobileNumber) throws Exception {
 
-        DriverDetails driverDetails = driverDetailsService.get(driverMobileNumber);
+        DriverDetails driverDetails = driverDetailsService.get(mobileNumber);
         return ResponseEntity.ok(driverDetails);
     }
 
-    @CachePut(value = "DriverDetails", key = "#driverMobileNumber")
+    @CachePut(value = "DriverDetails", key = "#mobileNumber")
     @PutMapping("/update")
     public ResponseEntity<DriverDetailsResponse> update (@RequestBody DriverDetailsRequest driverDetailsRequest){
 
         driverDetailsService.updateDriverDetails(driverDetailsRequest);
         DriverDetailsResponse driverDetailsResponse = new DriverDetailsResponse();
         driverDetailsResponse.setMessage("Successfully Updated.");
-        return ResponseEntity.ok(driverDetailsResponse);
-    }
-
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<DriverDetailsResponse> delete (@RequestBody DriverDetailsRequest driverDetailsRequest) throws Exception {
-
-       DeletedDriverDetails deletedDriverDetails = driverDetailsService.delete(driverDetailsRequest.getMobileNumber());
-        DriverDetailsResponse driverDetailsResponse = new DriverDetailsResponse();
-        driverDetailsResponse.setMessage("Enter the Otp.");
-        driverDetailsResponse.setOtp(deletedDriverDetails.getOtp());
         return ResponseEntity.ok(driverDetailsResponse);
     }
 
@@ -82,7 +70,7 @@ public class DriverDetailsController {
         return ResponseEntity.ok(driverDetailsResponse);
     }
 
-    @CachePut(value = "DriverDetails", key = "#driverMobileNumber")
+    @CachePut(value = "DriverDetails", key = "#mobileNumber")
     @PutMapping("/updateDriverImage")
     public ResponseEntity<DriverDetailsResponse> updateUserImage(@RequestBody DriverDetailsRequest driverDetailsRequest){
 
@@ -92,7 +80,7 @@ public class DriverDetailsController {
         return ResponseEntity.ok(driverDetailsResponse);
     }
 
-    @CachePut(value = "DriverDetails", key = "#driverMobileNumber")
+    @CachePut(value = "DriverDetails", key = "#mobileNumber")
     @PutMapping("/updateAdhaarImage")
     public ResponseEntity<DriverDetailsResponse> updateAdhaarImage(@RequestBody DriverDetailsRequest driverDetailsRequest){
 
@@ -102,7 +90,7 @@ public class DriverDetailsController {
         return ResponseEntity.ok(driverDetailsResponse);
     }
 
-    @CachePut(value = "DriverDetails", key = "#driverMobileNumber")
+    @CachePut(value = "DriverDetails", key = "#mobileNumber")
     @PutMapping("/updatePanImage")
     public ResponseEntity<DriverDetailsResponse> updatePanImage(@RequestBody DriverDetailsRequest driverDetailsRequest){
 
@@ -112,7 +100,7 @@ public class DriverDetailsController {
         return ResponseEntity.ok(driverDetailsResponse);
     }
 
-    @CachePut(value = "DriverDetails", key = "#driverMobileNumber")
+    @CachePut(value = "DriverDetails", key = "#mobileNumber")
     @PutMapping("/updateLicenceImage")
     public ResponseEntity<DriverDetailsResponse> updateLicenceImage(@RequestBody DriverDetailsRequest driverDetailsRequest){
 
@@ -122,7 +110,7 @@ public class DriverDetailsController {
         return ResponseEntity.ok(driverDetailsResponse);
     }
 
-    @CachePut(value = "DriverDetails", key = "#driverMobileNumber")
+    @CachePut(value = "DriverDetails", key = "#mobileNumber")
     @PutMapping("/updateStatus")
     public ResponseEntity<DriverDetailsResponse> updateStatus(@RequestBody DriverDetailsRequest driverDetailsRequest){
 

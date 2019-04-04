@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Repository
 public interface DriverDetailsRepository extends JpaRepository<DriverDetails, Long> {
 
-    @Query("select d from DriverTemporaryDetails d where d.driverMobileNumber = :driverMobileNumber")
-    public DriverDetails findByMdn(@PathVariable("driverMobileNumber") long driverMobileNumber);
+    @Query("select d from DriverTemporaryDetails d where d.mobileNumber = :mobileNumber and d.deleted = false")
+    public DriverDetails findByMdn(@PathVariable("mobileNumber") String mobileNumber);
 
 }
