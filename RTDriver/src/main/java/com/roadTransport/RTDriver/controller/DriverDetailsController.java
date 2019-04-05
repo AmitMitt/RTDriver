@@ -60,8 +60,8 @@ public class DriverDetailsController {
     }
 
     @CacheEvict(value = "DriverDetails", allEntries=true)
-    @PostMapping("/verifyDeletionOtp")
-    public ResponseEntity<DriverDetailsResponse> verifyDeletion(@RequestBody OtpRequest otpRequest) throws Exception {
+    @DeleteMapping("/delete")
+    public ResponseEntity<DriverDetailsResponse> delete(@RequestBody OtpRequest otpRequest) throws Exception {
 
         driverDetailsService.deleteByOtp(otpRequest);
         DriverDetailsResponse driverDetailsResponse = new DriverDetailsResponse();

@@ -74,6 +74,7 @@ public class DriverDetailsServiceImpl implements DriverDetailsService {
             driverDetails.setVehicleType(driverTemporaryDetails.getVehicleType());
 
             driverDetailsRepository.saveAndFlush(driverDetails);
+            driverTemporaryDetailsRepository.delete(driverTemporaryDetails);
             return driverDetails;
         }
     }
