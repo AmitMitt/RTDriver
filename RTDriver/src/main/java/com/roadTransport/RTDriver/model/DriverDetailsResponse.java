@@ -4,6 +4,15 @@ public class DriverDetailsResponse {
 
     private String message;
     private long otp;
+    private String walletPin;
+
+    public String getWalletPin() {
+        return walletPin;
+    }
+
+    public void setWalletPin(String walletPin) {
+        this.walletPin = walletPin;
+    }
 
     public long getOtp() {
         return otp;
@@ -26,6 +35,7 @@ public class DriverDetailsResponse {
         return "DriverDetailsResponse{" +
                 "message='" + message + '\'' +
                 ", otp=" + otp +
+                ", walletPin='" + walletPin + '\'' +
                 '}';
     }
 }

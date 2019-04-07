@@ -1,14 +1,17 @@
 package com.roadTransport.RTDriver.serviceImpl;
 
 import com.roadTransport.RTDriver.entity.DriverDetails;
-import com.roadTransport.RTDriver.entity.DriverTemporaryDetails;
 import com.roadTransport.RTDriver.model.DriverDetailsRequest;
+import com.roadTransport.RTDriver.model.SignUpRequest;
 import com.roadTransport.RTDriver.model.otp.OtpRequest;
 import com.roadTransport.RTDriver.otpService.OtpService;
 import com.roadTransport.RTDriver.repository.DriverDetailsPageRepository;
 import com.roadTransport.RTDriver.repository.DriverDetailsRepository;
-import com.roadTransport.RTDriver.repository.DriverTemporaryDetailsRepository;
 import com.roadTransport.RTDriver.service.DriverDetailsService;
+import com.roadTransport.RTDriver.walletService.WalletPinRequest;
+import com.roadTransport.RTDriver.walletService.WalletRequest;
+import com.roadTransport.RTDriver.walletService.WalletResponse;
+import com.roadTransport.RTDriver.walletService.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,59 +27,37 @@ public class DriverDetailsServiceImpl implements DriverDetailsService {
    private OtpService otpService;
 
    @Autowired
-   private DriverTemporaryDetailsRepository driverTemporaryDetailsRepository;
-
-   @Autowired
    private DriverDetailsRepository driverDetailsRepository;
 
    @Autowired
    private DriverDetailsPageRepository driverDetailsPageRepository;
 
+   @Autowired
+   private WalletService walletService;
+
     @Override
-    public DriverDetails add(OtpRequest otpRequest) throws Exception {
+    public DriverDetails add(SignUpRequest signUpRequest) throws Exception {
 
-        DriverTemporaryDetails driverTemporaryDetails = driverTemporaryDetailsRepository.findByMdn(String.valueOf(otpRequest.getUserMobileNumber()));
 
-        if(driverTemporaryDetails == null){
-            throw new Exception("Driver not exist.");
-        }
+        DriverDetails driverDetails = new DriverDetails();
+        driverDetails.setDeleted(false);
+        driverDetails.setStatus(false);
+        driverDetails.setKyc(false);
+        driverDetails.setDriverName(signUpRequest.getName());
+        driverDetails.setMobileNumber(signUpRequest.getMobile());
+        driverDetails.setCreatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis());
+        driverDetails.setEmail(signUpRequest.getEmail());
 
-        boolean verify = otpService.verify(otpRequest.getOtp(),otpRequest.getUserMobileNumber());
+        WalletRequest walletRequest = new WalletRequest();
+        walletRequest.setOwnerName(signUpRequest.getName());
+        walletRequest.setWalletId(Long.parseLong(signUpRequest.getMobile()));
+        long pin = Long.parseLong(signUpRequest.getMobile()) % 10000;
+        walletRequest.setWalletPin(String.valueOf(pin));
+        walletService.add(walletRequest);
 
-        if(verify == false){
+        driverDetailsRepository.saveAndFlush(driverDetails);
 
-            throw new Exception("Otp is Expired.");
-        }
-
-        else{
-
-            DriverDetails driverDetails = new DriverDetails();
-            driverDetails.setAadharCardNumber(driverTemporaryDetails.getAadharCardNumber());
-            driverDetails.setAdhaarCardImage(driverTemporaryDetails.getAdhaarCardImage());
-            driverDetails.setCreatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis());
-            driverDetails.setDescription(driverTemporaryDetails.getDescription());
-            driverDetails.setDob(driverTemporaryDetails.getDob());
-            driverDetails.setDriverAddress(driverTemporaryDetails.getDriverAddress());
-            driverDetails.setDriverAge(driverTemporaryDetails.getDriverAge());
-            driverDetails.setDriverImage(driverTemporaryDetails.getDriverImage());
-            driverDetails.setDriverName(driverTemporaryDetails.getDriverName());
-            driverDetails.setKyc(true);
-            driverDetails.setLicenceImage(driverTemporaryDetails.getLicenceImage());
-            driverDetails.setLicenceNumber(driverTemporaryDetails.getLicenceNumber());
-            driverDetails.setMobileNumber(driverTemporaryDetails.getMobileNumber());
-            driverDetails.setPanCardImage(driverTemporaryDetails.getPanCardImage());
-            driverDetails.setPanCardNumber(driverTemporaryDetails.getPanCardNumber());
-            driverDetails.setStatus(true);
-            driverDetails.setDeleted(false);
-            driverDetails.setTransportName(driverTemporaryDetails.getTransportName());
-            driverDetails.setTransportNumber(driverTemporaryDetails.getTransportNumber());
-            driverDetails.setVehicleNumber(driverTemporaryDetails.getVehicleNumber());
-            driverDetails.setVehicleType(driverTemporaryDetails.getVehicleType());
-
-            driverDetailsRepository.saveAndFlush(driverDetails);
-            driverTemporaryDetailsRepository.delete(driverTemporaryDetails);
-            return driverDetails;
-        }
+        return driverDetails;
     }
 
     @Override
@@ -177,6 +158,13 @@ public class DriverDetailsServiceImpl implements DriverDetailsService {
         }
         driverDetails.setDeleted(true);
         driverDetailsRepository.saveAndFlush(driverDetails);
+        return null;
+    }
+
+    @Override
+    public WalletResponse updatePin(WalletPinRequest walletPinRequest){
+
+        walletService.updatePin(walletPinRequest);
         return null;
     }
 }

@@ -5,6 +5,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -24,6 +26,11 @@ public class DriverDetails {
     private boolean deleted;
 
     @Column
+    @Email
+    @NotBlank
+    private String email;
+
+    @Column
     @NotNull
     private String driverName;
 
@@ -33,31 +40,24 @@ public class DriverDetails {
     private String mobileNumber;
 
     @Column
-    @NotNull
     private String licenceNumber;
 
     @Column
-    @NotNull
     private long aadharCardNumber;
 
     @Column
-    @NotNull
     private String panCardNumber;
 
     @Column(columnDefinition ="Text")
-    @NotNull
     private String adhaarCardImage;
 
     @Column(columnDefinition = "Text")
-    @NotNull
     private String panCardImage;
 
     @Column(columnDefinition = "Text")
-    @NotNull
     private String driverImage;
 
     @Column(columnDefinition = "Text")
-    @NotNull
     private String licenceImage;
 
     @Column
@@ -75,16 +75,13 @@ public class DriverDetails {
     @Column
     private String vehicleType;
 
-    @NotNull
     @Column
     private String driverAddress;
 
-    @NotNull
     @Column
     private long driverAge;
 
     @Column
-    @NotNull
     private String dob;
 
     @Column
@@ -98,6 +95,14 @@ public class DriverDetails {
 
     @Column
     private boolean kyc;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public boolean isDeleted() {
         return deleted;
@@ -288,6 +293,7 @@ public class DriverDetails {
         return "DriverDetails{" +
                 "id=" + id +
                 ", deleted=" + deleted +
+                ", email='" + email + '\'' +
                 ", driverName='" + driverName + '\'' +
                 ", mobileNumber='" + mobileNumber + '\'' +
                 ", licenceNumber='" + licenceNumber + '\'' +

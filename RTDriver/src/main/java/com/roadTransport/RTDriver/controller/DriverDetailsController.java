@@ -3,8 +3,11 @@ package com.roadTransport.RTDriver.controller;
 import com.roadTransport.RTDriver.entity.DriverDetails;
 import com.roadTransport.RTDriver.model.DriverDetailsRequest;
 import com.roadTransport.RTDriver.model.DriverDetailsResponse;
+import com.roadTransport.RTDriver.model.SignUpRequest;
 import com.roadTransport.RTDriver.model.otp.OtpRequest;
 import com.roadTransport.RTDriver.service.DriverDetailsService;
+import com.roadTransport.RTDriver.walletService.WalletPinRequest;
+import com.roadTransport.RTDriver.walletService.WalletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -16,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/DriverDetails")
 public class DriverDetailsController {
@@ -24,12 +28,11 @@ public class DriverDetailsController {
     private DriverDetailsService driverDetailsService;
 
     @PostMapping("/addDriver")
-    public ResponseEntity<DriverDetailsResponse> addDriver(@RequestBody OtpRequest otpRequest) throws Exception {
+    public ResponseEntity<DriverDetailsResponse> addDriver(@RequestBody SignUpRequest signUpRequest) throws Exception {
 
-        driverDetailsService.add(otpRequest);
+        driverDetailsService.add(signUpRequest);
         DriverDetailsResponse driverDetailsResponse = new DriverDetailsResponse();
         driverDetailsResponse.setMessage("Driver Add Successfully.");
-        driverDetailsResponse.setOtp(otpRequest.getOtp());
         return ResponseEntity.ok(driverDetailsResponse);
     }
 
@@ -118,5 +121,14 @@ public class DriverDetailsController {
         DriverDetailsResponse driverDetailsResponse = new DriverDetailsResponse();
         driverDetailsResponse.setMessage("Status has been change.");
         return ResponseEntity.ok(driverDetailsResponse);
+    }
+
+    @PostMapping("/updatePin")
+    public ResponseEntity<WalletResponse> updatePin(@RequestBody WalletPinRequest walletPinRequest){
+
+        driverDetailsService.updatePin(walletPinRequest);
+        WalletResponse walletResponse = new WalletResponse();
+        walletResponse.setMessage("Pin Updated.");
+        return ResponseEntity.ok(walletResponse);
     }
 }
