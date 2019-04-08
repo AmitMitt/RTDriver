@@ -1,5 +1,6 @@
 package com.roadTransport.RTDriver.serviceImpl;
 
+import com.roadTransport.RTDriver.entity.Driver;
 import com.roadTransport.RTDriver.entity.DriverDetails;
 import com.roadTransport.RTDriver.model.DriverDetailsRequest;
 import com.roadTransport.RTDriver.model.SignUpRequest;
@@ -7,6 +8,7 @@ import com.roadTransport.RTDriver.model.otp.OtpRequest;
 import com.roadTransport.RTDriver.otpService.OtpService;
 import com.roadTransport.RTDriver.repository.DriverDetailsPageRepository;
 import com.roadTransport.RTDriver.repository.DriverDetailsRepository;
+import com.roadTransport.RTDriver.repository.DriverRepository;
 import com.roadTransport.RTDriver.service.DriverDetailsService;
 import com.roadTransport.RTDriver.walletService.WalletPinRequest;
 import com.roadTransport.RTDriver.walletService.WalletRequest;
@@ -35,8 +37,11 @@ public class DriverDetailsServiceImpl implements DriverDetailsService {
    @Autowired
    private WalletService walletService;
 
+   @Autowired
+   private DriverRepository driverRepository;
+
     @Override
-    public DriverDetails add(SignUpRequest signUpRequest) throws Exception {
+    public DriverDetails add(SignUpRequest signUpRequest){
 
 
         DriverDetails driverDetails = new DriverDetails();
@@ -149,6 +154,7 @@ public class DriverDetailsServiceImpl implements DriverDetailsService {
     @Override
     public DriverDetails deleteByOtp(OtpRequest otpRequest) throws Exception {
 
+        Driver driver = driverRepository.findByMobile(String.valueOf(otpRequest.getUserMobileNumber()));
         DriverDetails driverDetails = driverDetailsRepository.findByMdn(String.valueOf(otpRequest.getUserMobileNumber()));
 
         boolean verify = otpService.verify(otpRequest.getOtp(),otpRequest.getUserMobileNumber());
@@ -158,6 +164,8 @@ public class DriverDetailsServiceImpl implements DriverDetailsService {
             throw new Exception("Otp is Expired.");
         }
         driverDetails.setDeleted(true);
+        driverRepository.delete(driver);
+        walletService.delete(otpRequest.getUserMobileNumber(),"ROLE_DRIVER");
         driverDetailsRepository.saveAndFlush(driverDetails);
         return null;
     }

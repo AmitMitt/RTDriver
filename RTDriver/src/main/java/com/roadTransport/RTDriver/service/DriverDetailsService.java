@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface DriverDetailsService {
 
-    public DriverDetails add (SignUpRequest signUpRequest) throws Exception;
+    public DriverDetails add (SignUpRequest signUpRequest);
     public DriverDetails get(String mobileNumber) throws Exception;
     public Page<DriverDetails> listAllByPage(Pageable pageable);
     public DriverDetails updateDriverDetails(DriverDetailsRequest driverDetailsRequest);
