@@ -53,6 +53,7 @@ public class DriverDetailsServiceImpl implements DriverDetailsService {
         walletRequest.setWalletId(Long.parseLong(signUpRequest.getMobile()));
         long pin = Long.parseLong(signUpRequest.getMobile()) % 10000;
         walletRequest.setWalletPin(String.valueOf(pin));
+        walletRequest.setRoleName("ROLE_DRIVER");
         walletService.add(walletRequest);
 
         driverDetailsRepository.saveAndFlush(driverDetails);
